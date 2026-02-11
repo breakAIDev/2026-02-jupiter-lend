@@ -1,39 +1,161 @@
-# Sponsorname audit details
-- Total Prize Pool: XXX XXX USDC (Airtable: Total award pool)
-    - HM awards: up to XXX XXX USDC (Airtable: HM (main) pool)
-        - If no valid Highs or Mediums are found, the HM pool is $0 (🐺 C4 EM: adjust in case of tiered pools)
-    - QA awards: XXX XXX USDC (Airtable: QA pool)
-    - Judge awards: XXX XXX USDC (Airtable: Judge Fee)
-    - Scout awards: $500 USDC (Airtable: Scout fee - but usually $500 USDC)
-    - (this line can be removed if there is no mitigation) Mitigation Review: XXX XXX USDC
+# Jupiter Lend audit details
+- Total Prize Pool: $107,000 in USDC
+    - HM awards: up to $96,000 in USDC
+        - If no valid Highs or Mediums are found, the HM pool is $0
+    - QA awards: $4,000 in USDC
+    - Judge awards: $6,500 in USDC
+    - Scout awards: $500 in USDC
 - [Read our guidelines for more details](https://docs.code4rena.com/competitions)
-- Starts XXX XXX XX 20:00 UTC (ex. `Starts March 22, 2023 20:00 UTC`)
-- Ends XXX XXX XX 20:00 UTC (ex. `Ends March 30, 2023 20:00 UTC`)
+- Starts February 12, 2026 20:00 UTC
+- Ends March 13, 2026 20:00 UTC
 
 ### ❗ Important notes for wardens
-(🐺 C4 staff: delete the PoC requirement section if not applicable - i.e. for non-Solidity/EVM audits.)
-1. A coded, runnable PoC is required for all High/Medium submissions to this audit. 
-    - This repo includes a basic template to run the test suite.
-    - PoCs must use the test suite provided in this repo.
-    - Your submission will be marked as Insufficient if the POC is not runnable and working with the provided test suite.
-    - Exception: PoC is optional (though recommended) for wardens with signal ≥ 0.4.
-1. Judging phase risk adjustments (upgrades/downgrades):
+1. Since this audit includes live/deployed code, **all submissions will be treated as sensitive**:
+    - Wardens are encouraged to submit High-risk submissions affecting live code promptly, to ensure timely disclosure of such vulnerabilities to the sponsor and guarantee payout in the case where a sponsor patches a live critical during the audit.
+    - Submissions will be hidden from all wardens (SR and non-SR alike) by default, to ensure that no sensitive issues are erroneously shared.
+    - If the submissions include findings affecting live code, there will be no post-judging QA phase. This ensures that awards can be distributed in a timely fashion, without compromising the security of the project. (Senior members of C4 staff will review the judges’ decisions per usual.)
+    - By default, submissions will not be made public until the report is published.
+    - Exception: if the sponsor indicates that no submissions affect live code, then we’ll make submissions visible to all authenticated wardens, and open PJQA to verified wardens per the usual C4 process.
+    - [The "live criticals" exception](https://docs.code4rena.com/awarding#the-live-criticals-exception) therefore applies.
+2. Judging phase risk adjustments (upgrades/downgrades):
     - High- or Medium-risk submissions downgraded by the judge to Low-risk (QA) will be ineligible for awards.
     - Upgrading a Low-risk finding from a QA report to a Medium- or High-risk finding is not supported.
     - As such, wardens are encouraged to select the appropriate risk level carefully during the submission phase.
-
-## V12 findings (🐺 C4 staff: remove this section for non-Solidity/EVM audits)
-
-[V12](https://v12.zellic.io/) is [Zellic](https://zellic.io)'s in-house AI auditing tool. It is the only autonomous Solidity auditor that [reliably finds Highs and Criticals](https://www.zellic.io/blog/introducing-v12/). All issues found by V12 will be judged as out of scope and ineligible for awards.
-
-V12 findings will typically be posted in this section within the first two days of the competition.  
 
 ## Publicly known issues
 
 _Anything included in this section is considered a publicly known issue and is therefore ineligible for awards._
 
-## 🐺 C4: Begin Gist paste here (and delete this line)
+- If transaction loads more than 64 accounts, as per current architecture of protocol. Liquidation or operate can be DOS'd. (See zenith audit H1)
+- Token extensions support can break protocol. (See zenith audit M5)
+- No way to close the Position PDA to claim the rent back. (Rent claim related issues)
+- Issues related to the first and last user of the vault, as we are aware of concerns around that and we create a forever intended locked dust position on each market.
 
+
+✅ SCOUTS: Please format the response above 👆 so its not a wall of text and its readable.
+
+# Overview
+
+[ ⭐️ SPONSORS: add info here ]
+
+## Links
+
+- **Previous audits:**  https://dev.jup.ag/resources/audits#jupiter-lend
+  - ✅ SCOUTS: If there are multiple report links, please format them in a list.
+- **Documentation:** https://fluid.guides.instadapp.io
+- **Website:** https://jup.ag/lend/earn
+- **X/Twitter:** https://x.com/jup_lend
+
+---
+
+# Scope
+
+[ ✅ SCOUTS: add scoping and technical details here ]
+
+### Files in scope
+- ✅ This should be completed using the `metrics.md` file
+- ✅ Last row of the table should be Total: SLOC
+- ✅ SCOUTS: Have the sponsor review and and confirm in text the details in the section titled "Scoping Q amp; A"
+
+*For sponsors that don't use the scoping tool: list all files in scope in the table below (along with hyperlinks) -- and feel free to add notes to emphasize areas of focus.*
+
+| Contract | SLOC | Purpose | Libraries used |  
+| ----------- | ----------- | ----------- | ----------- |
+| [contracts/folder/sample.sol](https://github.com/code-423n4/repo-name/blob/contracts/folder/sample.sol) | 123 | This contract does XYZ | [`@openzeppelin/*`](https://openzeppelin.com/contracts/) |
+
+### Files out of scope
+✅ SCOUTS: List files/directories out of scope
+
+# Additional context
+
+## Areas of concern (where to focus for bugs)
+
+Vaults Protocol: 
+- After liquidation the final position of user should loaded correctly.
+- Absorb and liquidation should work as intended. 
+- Branch state should be maintained at places required, like closed and merged. 
+
+
+✅ SCOUTS: Please format the response above 👆 so its not a wall of text and its readable.
+
+## Main invariants
+
+- Only owner of NFT should be able to withdraw or borrow from protocol. 
+- Only whitelisted users on Liquidity layer should be able to interact with it.
+- Amounts assigned to claim accounts on LL should always be available for claiming at any time (reserved)
+- exchange prices should only ever increase
+- no interactions on the extreme sides should be possible, where e.g. 1 is given as supply amount and leads to unexpected outcomes because of rounding, increasing on property in storage but not another
+- the protocol (the contracts) must always be on the winning side. i.e. supply round down, borrow round up and so on
+- withdraw and borrow limits must hold true
+
+
+✅ SCOUTS: Please format the response above 👆 so its not a wall of text and its readable.
+
+## All trusted roles in the protocol
+
+All the child protocols of liquidity layer are permissionless. 
+- Vaults
+- Lending
+- Flashloan 
+
+Liquidity layer is whitelist based protocol.
+
+✅ SCOUTS: Please format the response above 👆 using the template below👇
+
+| Role                                | Description                       |
+| --------------------------------------- | ---------------------------- |
+| Owner                          | Has superpowers                |
+| Administrator                             | Can change fees                       |
+
+✅ SCOUTS: Please format the response above 👆 so its not a wall of text and its readable.
+
+## Running tests
+
+> git clone https://github.com/Instadapp/fluid-solana-programs.git
+> cd fluid-solana-programs
+> pnpm install
+> pnpm build 
+
+# Build a specific program
+> pnpm build --program liquidity
+
+# Build everything + run both suites (default behaviour)
+> pnpm test
+
+# TypeScript-only run for Vaults
+> pnpm test --ts --program vaults --skip-build
+
+# Rust suite with extra cargo flags
+> pnpm test --rust -- -- --ignored
+
+# List supported program names / aliases
+> pnpm test --list-programs
+
+
+
+
+✅ SCOUTS: Please format the response above 👆 using the template below👇
+
+```bash
+git clone https://github.com/code-423n4/2023-08-arbitrum
+git submodule update --init --recursive
+cd governance
+foundryup
+make install
+make build
+make sc-election-test
+```
+To run code coverage
+```bash
+make coverage
+```
+
+✅ SCOUTS: Add a screenshot of your terminal showing the test coverage
+
+## Miscellaneous
+Employees of Jupiter Lend and employees' family members are ineligible to participate in this audit.
+
+Code4rena's rules cannot be overridden by the contents of this README. In case of doubt, please check with C4 staff.
 
 
 
