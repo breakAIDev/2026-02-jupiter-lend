@@ -179,6 +179,8 @@ The Lending Reward Rate Model program manages the calculation and distribution o
 
 ### Files in scope
 
+**Note:** The nSLoC counts in the following table have been automatically generated and may differ depending on the definition of what a "significant" line of code represents. As such, they should be considered indicative rather than absolute representations of the lines involved in each contract.
+
 | File   | nSLOC |
 | ------ | ----- |
 |[crates/library/src/errors.rs](https://github.com/code-423n4/2026-02-jupiter-lend/blob/main/crates/library/src/errors.rs)| 31 |
@@ -302,8 +304,6 @@ The Lending Reward Rate Model program manages the calculation and distribution o
 |[programs/vaults/src/utils/operate.rs](https://github.com/code-423n4/2026-02-jupiter-lend/blob/main/programs/vaults/src/utils/operate.rs)| 214 |
 |[programs/vaults/src/utils/validate.rs](https://github.com/code-423n4/2026-02-jupiter-lend/blob/main/programs/vaults/src/utils/validate.rs)| 267 |
 | **Totals** | **15195** |
-
-> Note: The nSLoC counts in the following table have been automatically generated and may differ depending on the definition of what a "significant" line of code represents. As such, they should be considered indicative rather than absolute representations of the lines involved in each contract.
 
 *For a machine-readable version, see [scope.txt](https://github.com/code-423n4/2026-02-jupiter-lend/blob/main/scope.txt)*
 
