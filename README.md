@@ -42,6 +42,9 @@ There is currently no way to close a position PDA to claim the rent back.
 
 Issues related to the first and last user of the `Vault` are out-of-scope as we are aware of concerns around that and we intend to create a forever-locked dust position on each market.
 
+### Phantom debt creation
+
+It is possible for user to create a phantom debt position (near min debt bounds) where the debt is not counted in the tick, but exists on position. But as tick acknowledges this debt during position interaction, so there is no effect on the working on the protocol.
 
 # Overview
 
