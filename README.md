@@ -36,7 +36,7 @@ Token extensions support can break protocol. (See Zenith Audit Exhibit M5)
 
 ### Rent Claim Issue
 
-There is currently no way to close a position PDA to claim the rent back.
+There is currently no way to close a position PDA to claim the rent back. (see [Certora FV](https://static-r2.jup.ag/lend/audits/centora_audit.pdf), exhibit L03)
 
 ### First / Last Vault User Issues
 
@@ -172,6 +172,7 @@ The Lending Reward Rate Model program manages the calculation and distribution o
   - [Offside Labs Vault Report](https://github.com/jup-ag/docs/blob/main/static/files/audits/lend-vault-offside.pdf)
   - [Offside Labs Liquidity Report](https://github.com/jup-ag/docs/tree/main/static/files/audits/lend-liquidity-offside.pdf)
   - [Mixbytes Vault Report](https://github.com/jup-ag/docs/blob/main/static/files/audits/lend-vault-mixbytes.pdf)
+  - [Certora Formal Verification Report](https://static-r2.jup.ag/lend/audits/centora_audit.pdf)
 - **Documentation:** https://fluid.guides.instadapp.io
 - **Website:** https://jup.ag/lend/earn
 - **X/Twitter:** https://x.com/jup_lend
