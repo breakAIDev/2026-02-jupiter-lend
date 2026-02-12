@@ -44,7 +44,7 @@ Issues related to the first and last user of the `Vault` are out-of-scope as we 
 
 ### Phantom debt creation
 
-It is possible for user to create a phantom debt position (near min debt bounds) where the debt is not counted in the tick, but exists on position. But as tick acknowledges this debt during position interaction, so there is no effect on the working on the protocol.
+It is possible for user to create a phantom debt position (near min debt bounds) where the debt is not counted in the tick, but it exists on position. As the tick acknowledges this debt during position interaction, there is no effect on it working on the protocol.
 
 # Overview
 
