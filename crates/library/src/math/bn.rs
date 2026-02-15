@@ -46,9 +46,9 @@ pub fn mul_div_normal(normal: u64, big_number1: u64, big_number2: u64) -> Result
         return Ok(0);
     }
 
-    // Extract exponents from the big numbers
-    let exponent1 = big_number1 & EXPONENT_MAX_DEBT_FACTOR;
-    let exponent2 = big_number2 & EXPONENT_MAX_DEBT_FACTOR;
+    // Extract coefficients (validate and mask to 35 bits)
+    let (coefficient1, exponent1) = validate_and_extract(big_number1)?;
+    let (coefficient2, exponent2) = validate_and_extract(big_number2)?;
 
     // Calculate net exponent (exponent2 - exponent1)
     if exponent2 < exponent1 {
@@ -58,10 +58,6 @@ pub fn mul_div_normal(normal: u64, big_number1: u64, big_number2: u64) -> Result
     let net_exponent = exponent2 - exponent1;
 
     if net_exponent < 129 {
-        // Extract coefficients
-        let coefficient1 = big_number1 >> EXPONENT_SIZE_DEBT_FACTOR;
-        let coefficient2 = big_number2 >> EXPONENT_SIZE_DEBT_FACTOR;
-
         // Calculate (normal * coefficient1) / (coefficient2 << net_exponent)
         // Use u128 for intermediate calculations to prevent overflow
         let numerator: u128 = (normal as u128) * (coefficient1 as u128);
@@ -104,9 +100,8 @@ pub fn mul_div_big_number(big_number: u64, number1: u128) -> Result<u64> {
         return Ok(0);
     }
 
-    // Extract coefficient from big_number
-    let coefficient = big_number >> EXPONENT_SIZE_DEBT_FACTOR;
-    let exponent = big_number & EXPONENT_MAX_DEBT_FACTOR;
+    // Validate and extract coefficient and exponent from big_number
+    let (coefficient, exponent) = validate_and_extract(big_number)?;
 
     // Calculate result numerator: big_number coefficient * normal number
     let result_numerator: u128 = (coefficient as u128) * number1;
@@ -158,11 +153,9 @@ pub fn mul_div_big_number(big_number: u64, number1: u128) -> Result<u64> {
 /// # Returns
 /// BigNumber format with coefficient and exponent
 pub fn mul_big_number(big_number1: u64, big_number2: u64) -> Result<u64> {
-    // Extract coefficients and exponents
-    let coefficient1: u64 = big_number1 >> EXPONENT_SIZE_DEBT_FACTOR;
-    let coefficient2: u64 = big_number2 >> EXPONENT_SIZE_DEBT_FACTOR;
-    let exponent1: u64 = big_number1 & EXPONENT_MAX_DEBT_FACTOR;
-    let exponent2: u64 = big_number2 & EXPONENT_MAX_DEBT_FACTOR;
+    // Validate and extract coefficients and exponents
+    let (coefficient1, exponent1) = validate_and_extract(big_number1)?;
+    let (coefficient2, exponent2) = validate_and_extract(big_number2)?;
 
     // Calculate result coefficient
     // res coefficient at max can be 34359738367 * 34359738367 = 1180591620648691826689 (X35 * X35 fits in 70 bits)
@@ -217,11 +210,9 @@ pub fn div_big_number(big_number1: u64, big_number2: u64) -> Result<u64> {
         return Err(error!(ErrorCodes::LibraryDivisionByZero));
     }
 
-    // Extract coefficients and exponents
-    let coefficient1 = big_number1 >> EXPONENT_SIZE_DEBT_FACTOR;
-    let coefficient2 = big_number2 >> EXPONENT_SIZE_DEBT_FACTOR;
-    let exponent1 = big_number1 & EXPONENT_MAX_DEBT_FACTOR;
-    let exponent2 = big_number2 & EXPONENT_MAX_DEBT_FACTOR;
+    // Validate and extract coefficients and exponents
+    let (coefficient1, exponent1) = validate_and_extract(big_number1)?;
+    let (coefficient2, exponent2) = validate_and_extract(big_number2)?;
 
     // Check for division by zero coefficient
     if coefficient2 == 0 {
@@ -289,13 +280,38 @@ fn create_big_number(coefficient: u64, exponent: u64) -> u64 {
 #[allow(dead_code)]
 /// Helper function to extract coefficient from big number
 fn extract_coefficient(big_number: u64) -> u64 {
-    big_number >> EXPONENT_SIZE_DEBT_FACTOR
+    (big_number >> EXPONENT_SIZE_DEBT_FACTOR) & COEFFICIENT_MAX
 }
 
 #[allow(dead_code)]
 /// Helper function to extract exponent from big number
 fn extract_exponent(big_number: u64) -> u64 {
     big_number & EXPONENT_MAX_DEBT_FACTOR
+}
+
+/// Validate a big-number fits expected mask and extract coefficient+exponent.
+fn validate_and_extract(big_number: u64) -> Result<(u64, u64)> {
+    if big_number == 0 {
+        return Ok((0, 0));
+    }
+
+    // Ensure there are no bits above the allowed (coefficient+exponent) mask
+    if big_number > MAX_MASK_DEBT_FACTOR {
+        return Err(error!(ErrorCodes::LibraryBnError));
+    }
+
+    // Extract raw coefficient and mask to allowed coefficient size
+    let coefficient_raw = big_number >> EXPONENT_SIZE_DEBT_FACTOR;
+    let coefficient = coefficient_raw & COEFFICIENT_MAX;
+
+    // Ensure 35th bit (MSB of coefficient) is set as required by format
+    if coefficient & COEFFICIENT_MIN == 0 {
+        return Err(error!(ErrorCodes::LibraryBnError));
+    }
+
+    let exponent = big_number & EXPONENT_MAX_DEBT_FACTOR;
+
+    Ok((coefficient, exponent))
 }
 
 #[cfg(test)]
@@ -764,5 +780,43 @@ mod tests {
         // When both exponents equal DECIMALS_DEBT_FACTOR, the result should have specific properties
         assert!(coeff >= COEFFICIENT_MIN);
         assert!(exp >= 0); // Should not underflow
+    }
+
+    #[test]
+    fn test_validate_and_extract_behaviour() {
+        // zero case
+        assert_eq!(validate_and_extract(0).unwrap(), (0, 0));
+
+        // valid big number
+        let coeff = COEFFICIENT_MIN;
+        let exp = 100u64;
+        let valid = create_big_number(coeff, exp);
+        let (ex_coeff, ex_exp) = validate_and_extract(valid).unwrap();
+        assert_eq!(ex_coeff, coeff);
+        assert_eq!(ex_exp, exp);
+
+        // too large bits set (above mask)
+        let malformed_high = (1u64 << 60) | valid; // set a high bit above mask
+        assert!(validate_and_extract(malformed_high).is_err());
+
+        // coefficient MSB (35th bit) unset
+        let low_coeff = COEFFICIENT_MIN - 1; // MSB not set
+        let malformed_coeff = create_big_number(low_coeff, 10);
+        assert!(validate_and_extract(malformed_coeff).is_err());
+    }
+
+    #[test]
+    fn test_functions_reject_malformed_inputs() {
+        let normal = 1000u64;
+        let valid = create_big_number(COEFFICIENT_MIN, 16384);
+        let malformed_high = (1u64 << 60) | valid;
+
+        // mul_div_normal should return error when encountering malformed big_number
+        let res = mul_div_normal(normal, valid, malformed_high);
+        assert!(res.is_err());
+
+        // div_big_number should error when divisor malformed
+        let res2 = div_big_number(valid, malformed_high);
+        assert!(res2.is_err());
     }
 }
