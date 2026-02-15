@@ -42,11 +42,14 @@ const TWO_POWER_COEFFICIENT_PLUS_PRECISION_MINUS_1_MINUS_1: u128 =
 /// normal * big_number1 / big_number2
 pub fn mul_div_normal(normal: u64, big_number1: u64, big_number2: u64) -> Result<u64> {
     // Handle zero cases early
-    if big_number1 == 0 || big_number2 == 0 {
+    if big_number1 == 0 {
         return Ok(0);
     }
+    if big_number2 == 0 {
+        return Err(error!(ErrorCodes::LibraryDivisionByZero));
+    }
 
-    // Extract coefficients (validate and mask to 35 bits)
+    // Validate and extract coefficients/exponents from the big numbers
     let (coefficient1, exponent1) = validate_and_extract(big_number1)?;
     let (coefficient2, exponent2) = validate_and_extract(big_number2)?;
 
@@ -295,21 +298,23 @@ fn validate_and_extract(big_number: u64) -> Result<(u64, u64)> {
         return Ok((0, 0));
     }
 
-    // Ensure there are no bits above the allowed (coefficient+exponent) mask
+    // Ensure there are no bits above the allowed (coefficient+exponent) mask.
     if big_number > MAX_MASK_DEBT_FACTOR {
         return Err(error!(ErrorCodes::LibraryBnError));
     }
 
-    // Extract raw coefficient and mask to allowed coefficient size
-    let coefficient_raw = big_number >> EXPONENT_SIZE_DEBT_FACTOR;
-    let coefficient = coefficient_raw & COEFFICIENT_MAX;
+    let coefficient = big_number >> EXPONENT_SIZE_DEBT_FACTOR;
+    let exponent = big_number & EXPONENT_MAX_DEBT_FACTOR;
 
-    // Ensure 35th bit (MSB of coefficient) is set as required by format
+    // Ensure 35th bit (MSB of coefficient) is set as required by format.
     if coefficient & COEFFICIENT_MIN == 0 {
         return Err(error!(ErrorCodes::LibraryBnError));
     }
 
-    let exponent = big_number & EXPONENT_MAX_DEBT_FACTOR;
+    // Exponent 0 is invalid for protocol big-number format.
+    if exponent == 0 {
+        return Err(error!(ErrorCodes::LibraryBnError));
+    }
 
     Ok((coefficient, exponent))
 }
@@ -803,6 +808,10 @@ mod tests {
         let low_coeff = COEFFICIENT_MIN - 1; // MSB not set
         let malformed_coeff = create_big_number(low_coeff, 10);
         assert!(validate_and_extract(malformed_coeff).is_err());
+
+        // exponent zero invalid
+        let malformed_exp_zero = create_big_number(COEFFICIENT_MIN, 0);
+        assert!(validate_and_extract(malformed_exp_zero).is_err());
     }
 
     #[test]
@@ -815,8 +824,16 @@ mod tests {
         let res = mul_div_normal(normal, valid, malformed_high);
         assert!(res.is_err());
 
+        // mul_big_number should error on malformed input
+        let res_mul = mul_big_number(valid, malformed_high);
+        assert!(res_mul.is_err());
+
         // div_big_number should error when divisor malformed
-        let res2 = div_big_number(valid, malformed_high);
-        assert!(res2.is_err());
+        let res_div = div_big_number(valid, malformed_high);
+        assert!(res_div.is_err());
+
+        // mul_div_big_number should error on malformed input
+        let res_mul_div_big = mul_div_big_number(malformed_high, TWO_POWER_64);
+        assert!(res_mul_div_big.is_err());
     }
 }
