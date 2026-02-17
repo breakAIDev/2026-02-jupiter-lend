@@ -16,7 +16,7 @@ use library::structs::AddressBool;
 use library::token::check_for_token_extensions_only_mint;
 
 #[cfg(feature = "staging")]
-declare_id!("68LHLkpgjAvo6Lgd9FT6KYEX4FWn1911EohSXxHYMFjc");
+declare_id!("Fpf6hTQiGKQfe3bxSdFhe19k6oWkJjsVhK6ucM8g8sYj");
 
 #[cfg(not(feature = "staging"))]
 declare_id!("jup7TthsMgcR9Y3L277b8Eo9uboVSmu1utkuXHNUKar");

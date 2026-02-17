@@ -8,20 +8,20 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-lending = "7tjE28izRUjzmxC1QNXnNwcc4N82CNYCexf3k8mw67s3"
-lending_reward_rate_model = "68LHLkpgjAvo6Lgd9FT6KYEX4FWn1911EohSXxHYMFjc"
-liquidity = "5uDkCoM96pwGYhAUucvCzLfm5UcjVRuxz6gH81RnRBmL"
-oracle = "C59ahnV7xHuW1Q9E87yrYbCHMHaYnkqRdix8BfLp3vnk"
-vaults = "Ho32sUQ4NzuAQgkPkHuNDG3G18rgHmYtXFA8EBmqQrAu"
-flashloan = "aaae6RAZNe4wLgKkjKnJxqQ15B58yPUdcygDbTUpXo3"
+flashloan = "BnTnyozaejRCfKQ8pghPcc3FYp5bi988qb38dYAUCLUA"
+lending = "2xZUVLvSQ2ZBUtCQtfmeoR7QCozKzjy8iqmvw45TdfBX"
+lending_reward_rate_model = "Fpf6hTQiGKQfe3bxSdFhe19k6oWkJjsVhK6ucM8g8sYj"
+liquidity = "Coqi3ZF7vbi8BCq45v7QHXUFVhY1K4rELGrTJWxTTdQp"
+oracle = "DHCnAPjez35WzmzBvyw1guNjqxWeGYCxRJQxBVcVdWr4"
+vaults = "7ymCN6S7GYxVwZBiUL7GaXEjY9c1VEni5k9mXbu1PiYC"
 
 [programs.mainnet]
+flashloan = "jupgfSgfuAXv4B6R2Uxu85Z1qdzgju79s6MfZekN6XS"
 lending = "jup3YeL8QhtSx1e253b2FDvsMNC87fDrgQZivbrndc9"
 lending_reward_rate_model = "jup7TthsMgcR9Y3L277b8Eo9uboVSmu1utkuXHNUKar"
 liquidity = "jupeiUmn818Jg1ekPURTpr4mFo29p46vygyykFJ3wZC"
 oracle = "jupnw4B6Eqs7ft6rxpzYLJZYSnrpRgPcr589n5Kv4oc"
 vaults = "jupr81YtYssSyPt8jbnGuiWon5f6x9TcDEFxYe3Bdzi"
-flashloan = "jupgfSgfuAXv4B6R2Uxu85Z1qdzgju79s6MfZekN6XS"
 
 [registry]
 url = "https://anchor.projectserum.com"

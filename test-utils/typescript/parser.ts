@@ -45,7 +45,7 @@ interface ParsedInstruction {
 
 const RETURN_TYPES: ReturnTypeConfig[] = [
   {
-    programId: new PublicKey("jupnw4B6Eqs7ft6rxpzYLJZYSnrpRgPcr589n5Kv4oc"),
+    programId: new PublicKey("DHCnAPjez35WzmzBvyw1guNjqxWeGYCxRJQxBVcVdWr4"),
     function: "get_both_exchange_rate",
     returns: [
       { name: "liquidate", type: "u128" },
@@ -53,7 +53,7 @@ const RETURN_TYPES: ReturnTypeConfig[] = [
     ],
   },
   {
-    programId: new PublicKey("jupr81YtYssSyPt8jbnGuiWon5f6x9TcDEFxYe3Bdzi"),
+    programId: new PublicKey("7ymCN6S7GYxVwZBiUL7GaXEjY9c1VEni5k9mXbu1PiYC"),
     function: "operate",
     returns: [
       { name: "nft_id", type: "u32" },
@@ -62,7 +62,7 @@ const RETURN_TYPES: ReturnTypeConfig[] = [
     ],
   },
   {
-    programId: new PublicKey("jupr81YtYssSyPt8jbnGuiWon5f6x9TcDEFxYe3Bdzi"),
+    programId: new PublicKey("7ymCN6S7GYxVwZBiUL7GaXEjY9c1VEni5k9mXbu1PiYC"),
     function: "liquidate",
     returns: [
       { name: "col_amount", type: "u128" },
@@ -483,11 +483,11 @@ async function main() {
     "https://api.mainnet-beta.solana.com",
     [
       {
-        programId: new PublicKey("jupnw4B6Eqs7ft6rxpzYLJZYSnrpRgPcr589n5Kv4oc"),
+        programId: new PublicKey("DHCnAPjez35WzmzBvyw1guNjqxWeGYCxRJQxBVcVdWr4"),
         idl: oracleIdl as Idl,
       },
       {
-        programId: new PublicKey("jupr81YtYssSyPt8jbnGuiWon5f6x9TcDEFxYe3Bdzi"),
+        programId: new PublicKey("7ymCN6S7GYxVwZBiUL7GaXEjY9c1VEni5k9mXbu1PiYC"),
         idl: vaultIdl as Idl,
       },
     ],

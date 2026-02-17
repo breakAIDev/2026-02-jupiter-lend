@@ -22,7 +22,7 @@ use crate::state::*;
 use library::structs::AddressBool;
 
 #[cfg(feature = "staging")]
-declare_id!("C59ahnV7xHuW1Q9E87yrYbCHMHaYnkqRdix8BfLp3vnk");
+declare_id!("DHCnAPjez35WzmzBvyw1guNjqxWeGYCxRJQxBVcVdWr4");
 
 #[cfg(not(feature = "staging"))]
 declare_id!("jupnw4B6Eqs7ft6rxpzYLJZYSnrpRgPcr589n5Kv4oc");

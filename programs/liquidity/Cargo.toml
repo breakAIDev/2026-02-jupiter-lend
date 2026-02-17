@@ -9,7 +9,7 @@ crate-type = ["cdylib", "lib"]
 name = "liquidity"
 
 [features]
-default = []
+default = ["staging"]
 staging = []
 cpi = ["no-entrypoint"]
 no-entrypoint = []

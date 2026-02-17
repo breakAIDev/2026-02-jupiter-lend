@@ -10,7 +10,7 @@ mod tests {
     use solana_client::rpc_client::RpcClient;
     use solana_sdk::{instruction::Instruction, pubkey::Pubkey, signer::Signer};
 
-    const LRRM_PROGRAM_ID: &str = "jup7TthsMgcR9Y3L277b8Eo9uboVSmu1utkuXHNUKar";
+    const LRRM_PROGRAM_ID: &str = "Fpf6hTQiGKQfe3bxSdFhe19k6oWkJjsVhK6ucM8g8sYj";
 
     fn get_oracle_pda(program_id: &Pubkey, nonce: u16) -> (Pubkey, u8) {
         Pubkey::find_program_address(&[ORACLE_SEED, nonce.to_le_bytes().as_slice()], program_id)

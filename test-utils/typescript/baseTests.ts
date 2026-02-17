@@ -374,13 +374,62 @@ export class BaseSetup extends ComputeBudgetLogger {
 
   async setupSplTokenMints(mints: MintKeys[]) {
     for (const mint of mints) {
-      const accountInfo = await this.getOnchainAccountInfo(
+      let accountInfo = await this.getOnchainAccountInfo(
         MintInfo.getMint(mint)
       );
 
       this.setProgramName(MintInfo.getMint(mint).toString(), mint.toString());
 
-      const decoded = unpackMint(MintInfo.getMint(mint), accountInfo);
+      let decoded: any = null;
+      // Try unpacking the onchain mint; if it doesn't exist or is owned by
+      // a different program (e.g., when running in the LiteSVM test harness),
+      // create a reasonable default mint account and use that.
+      try {
+        if (!accountInfo || !accountInfo.owner) {
+          throw new Error("Missing onchain accountInfo");
+        }
+        decoded = unpackMint(MintInfo.getMint(mint), accountInfo);
+      } catch (e) {
+        // Fallback: create a default mint structure with sensible decimals
+        const defaultDecimals =
+          mint === MintKeys.WSOL || mint === MintKeys.HELIUS_SINGLE_POOL
+            ? 9
+            : 6;
+
+        decoded = {
+          mintAuthority: null,
+          decimals: defaultDecimals,
+          isInitialized: true,
+          freezeAuthority: null,
+          supply: BigInt(0),
+        };
+
+        // Prepare a buffer for the mint and set a local account in the LiteSVM client
+        const buffer = Buffer.alloc(MINT_SIZE);
+        const rawMintFallback: RawMint = {
+          mintAuthorityOption: 0,
+          mintAuthority: PublicKey.default,
+          supply: BigInt(0),
+          decimals: decoded.decimals,
+          isInitialized: true,
+          freezeAuthorityOption: 0,
+          freezeAuthority: PublicKey.default,
+        };
+        MintLayout.encode(rawMintFallback as any, buffer as any);
+
+        this.client.setAccount(MintInfo.getMint(mint), {
+          data: buffer,
+          executable: false,
+          lamports: 1_000_000_000,
+          owner: TOKEN_PROGRAM_ID,
+        });
+
+        // Use the account we just inserted as the accountInfo for further encoding
+        // (cast to any to satisfy TS variations between Connection and LiteSVM account shapes)
+        accountInfo = this.client.getAccount(MintInfo.getMint(mint)) as any;
+      }
+
+      // ensure supply is large enough for tests
       decoded.supply = bnToBigInt(new BN(2).pow(new BN(58)));
 
       const buffer = Buffer.alloc(MINT_SIZE);
@@ -395,13 +444,13 @@ export class BaseSetup extends ComputeBudgetLogger {
         freezeAuthority: decoded.freezeAuthority || PublicKey.default,
       };
 
-      MintLayout.encode(rawMint, buffer);
+      MintLayout.encode(rawMint as any, buffer as any);
 
       this.client.setAccount(MintInfo.getMint(mint), {
         data: buffer,
-        executable: accountInfo.executable,
-        lamports: accountInfo.lamports,
-        owner: accountInfo.owner,
+        executable: accountInfo.executable ?? false,
+        lamports: accountInfo.lamports ?? 1_000_000_000,
+        owner: accountInfo.owner ?? TOKEN_PROGRAM_ID,
       });
     }
   }

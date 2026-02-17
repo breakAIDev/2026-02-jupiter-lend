@@ -177,19 +177,21 @@ pub fn operate<'info>(
                     memory_vars.debt_raw = 0;
                     memory_vars.col_raw = 0;
                 }
-            } else {
-                // Check if tick has debt (if not, something is wrong)
-                // below require can fail when a user liquidity is extremely low (talking about way less than even $1)
-                // adding require meaning this vault user won't be able to interact unless someone makes the liquidity in tick as non 0.
-                // reason of adding is the tick has already removed from everywhere. Can removing it again break something? Better to simply remove that case entirely
-                if tick_data.raw_debt == 0 {
-                    return Err(error!(ErrorCodes::VaultTickIsEmpty));
+            } else if tick_data.raw_debt == 0 {
+                // If tick debt is already 0, do best-effort cleanup and continue.
+                // This avoids locking users in stale-edge states.
+                if memory_vars.tick == top_tick {
+                    top_tick = vault_state.set_top_tick(&mut branch_accounts, &tick_has_debt_accounts)?;
                 }
-
+                tick_has_debt_accounts.update_tick_has_debt(memory_vars.tick, false)?;
+                memory_vars.debt_raw = memory_vars.get_net_debt_raw()?;
+            } else {
                 let debt_in_tick = tick_data.get_raw_debt()?;
 
-                // Calculate remaining debt in tick
-                let mut remaining_debt: u128 = debt_in_tick.saturating_sub(memory_vars.debt_raw);
+                // Invariant: user debt tracked in tick flow must not exceed debt currently in tick.
+                let mut remaining_debt: u128 = debt_in_tick
+                    .safe_sub(memory_vars.debt_raw)
+                    .map_err(|_| error!(ErrorCodes::VaultDebtAccountingMismatch))?;
 
                 // If debt is too low, set it to zero
                 if remaining_debt < get_minimum_tick_debt(ctx.accounts.borrow_token.decimals)? {

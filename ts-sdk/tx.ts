@@ -46,27 +46,27 @@ interface DecodedTransaction {
 
 // Program ID mappings
 const PROGRAM_MAPPINGS: Record<string, { name: string; idlUrl: string }> = {
-  jupeiUmn818Jg1ekPURTpr4mFo29p46vygyykFJ3wZC: {
+  Coqi3ZF7vbi8BCq45v7QHXUFVhY1K4rELGrTJWxTTdQp: {
     name: "LIQUIDITY_PROGRAM",
     idlUrl:
       "https://raw.githubusercontent.com/jup-ag/jupiter-lend/refs/heads/main/target/idl/liquidity.json",
   },
-  jup3YeL8QhtSx1e253b2FDvsMNC87fDrgQZivbrndc9: {
+  "2xZUVLvSQ2ZBUtCQtfmeoR7QCozKzjy8iqmvw45TdfBX": {
     name: "LENDING_PROGRAM",
     idlUrl:
       "https://raw.githubusercontent.com/jup-ag/jupiter-lend/refs/heads/main/target/idl/lending.json",
   },
-  jup7TthsMgcR9Y3L277b8Eo9uboVSmu1utkuXHNUKar: {
+  Fpf6hTQiGKQfe3bxSdFhe19k6oWkJjsVhK6ucM8g8sYj: {
     name: "LRRM_PROGRAM",
     idlUrl:
       "https://raw.githubusercontent.com/jup-ag/jupiter-lend/refs/heads/main/target/idl/lending_reward_rate_model.json",
   },
-  jupnw4B6Eqs7ft6rxpzYLJZYSnrpRgPcr589n5Kv4oc: {
+  DHCnAPjez35WzmzBvyw1guNjqxWeGYCxRJQxBVcVdWr4: {
     name: "ORACLE_PROGRAM",
     idlUrl:
       "https://raw.githubusercontent.com/jup-ag/jupiter-lend/refs/heads/main/target/idl/oracle.json",
   },
-  jupr81YtYssSyPt8jbnGuiWon5f6x9TcDEFxYe3Bdzi: {
+  "7ymCN6S7GYxVwZBiUL7GaXEjY9c1VEni5k9mXbu1PiYC": {
     name: "VAULTS_PROGRAM",
     idlUrl:
       "https://raw.githubusercontent.com/jup-ag/jupiter-lend/refs/heads/main/target/idl/vaults.json",

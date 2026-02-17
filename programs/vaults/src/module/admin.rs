@@ -99,9 +99,9 @@ pub fn init_vault_config(
 
     // Check all limits
     if params.supply_rate_magnifier > FOUR_DECIMALS.cast()?
-        || params.supply_rate_magnifier < -FOUR_DECIMALS.cast()?
+        || params.supply_rate_magnifier < 0
         || params.borrow_rate_magnifier > FOUR_DECIMALS.cast()?
-        || params.borrow_rate_magnifier < -FOUR_DECIMALS.cast()?
+        || params.borrow_rate_magnifier < 0
         || collateral_factor >= liquidation_threshold
         || liquidation_threshold >= liquidation_max_limit
         || withdraw_gap > THREE_DECIMALS.cast()?
@@ -384,9 +384,7 @@ pub fn update_supply_rate_magnifier(
 ) -> Result<()> {
     verify_admin_context(&ctx, vault_id)?;
 
-    if supply_rate_magnifier > FOUR_DECIMALS.cast()?
-        || supply_rate_magnifier < -FOUR_DECIMALS.cast()?
-    {
+    if supply_rate_magnifier > FOUR_DECIMALS.cast()? || supply_rate_magnifier < 0 {
         return Err(error!(ErrorCodes::VaultAdminValueAboveLimit));
     }
 
@@ -415,9 +413,7 @@ pub fn update_borrow_rate_magnifier(
 ) -> Result<()> {
     verify_admin_context(&ctx, vault_id)?;
 
-    if borrow_rate_magnifier > FOUR_DECIMALS.cast()?
-        || borrow_rate_magnifier < -FOUR_DECIMALS.cast()?
-    {
+    if borrow_rate_magnifier > FOUR_DECIMALS.cast()? || borrow_rate_magnifier < 0 {
         return Err(error!(ErrorCodes::VaultAdminValueAboveLimit));
     }
 
@@ -664,9 +660,9 @@ pub fn update_core_settings(
 
     // Check all limits
     if params.supply_rate_magnifier > FOUR_DECIMALS.cast()?
-        || params.supply_rate_magnifier < -FOUR_DECIMALS.cast()?
+        || params.supply_rate_magnifier < 0
         || params.borrow_rate_magnifier > FOUR_DECIMALS.cast()?
-        || params.borrow_rate_magnifier < -FOUR_DECIMALS.cast()?
+        || params.borrow_rate_magnifier < 0
         || collateral_factor >= liquidation_threshold
         || liquidation_threshold >= liquidation_max_limit
         || withdraw_gap > THREE_DECIMALS.cast()?

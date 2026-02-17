@@ -19,7 +19,7 @@ use validate::{validate_flashloan, validate_flashloan_payback};
 use library::math::{casting::*, safe_math::*};
 
 #[cfg(feature = "staging")]
-declare_id!("aaae6RAZNe4wLgKkjKnJxqQ15B58yPUdcygDbTUpXo3");
+declare_id!("BnTnyozaejRCfKQ8pghPcc3FYp5bi988qb38dYAUCLUA");
 
 #[cfg(not(feature = "staging"))]
 declare_id!("jupgfSgfuAXv4B6R2Uxu85Z1qdzgju79s6MfZekN6XS");

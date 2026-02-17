@@ -9,7 +9,8 @@ crate-type = ["cdylib", "lib"]
 name = "lending_reward_rate_model"
 
 [features]
-default = []
+default = ["staging"]
+staging = []
 cpi = ["no-entrypoint"]
 no-entrypoint = []
 no-idl = []

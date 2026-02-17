@@ -38,6 +38,9 @@ pub enum ErrorCodes {
     #[msg(VAULT_TICK_IS_EMPTY)]
     VaultTickIsEmpty,
 
+    #[msg(VAULT_DEBT_ACCOUNTING_MISMATCH)]
+    VaultDebtAccountingMismatch,
+
     #[msg(VAULT_POSITION_ABOVE_CF)]
     VaultPositionAboveCF,
 
@@ -79,6 +82,9 @@ pub enum ErrorCodes {
 
     #[msg(VAULT_LIQUIDITY_EXCHANGE_PRICE_UNEXPECTED)]
     VaultLiquidityExchangePriceUnexpected,
+
+    #[msg(VAULT_EXCHANGE_PRICE_UNEXPECTED)]
+    VaultExchangePriceUnexpected,
 
     #[msg(VAULT_USER_DEBT_TOO_LOW)]
     VaultUserDebtTooLow,

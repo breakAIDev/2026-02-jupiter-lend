@@ -1,16 +1,16 @@
 export const REBALANCER = "HYbxGkNvEwvZ14RzJHPB9h3dWfXjxwAEhkyzJRHx1hBf";
 
-export const LIQUIDITY_PROGRAM = "jupeiUmn818Jg1ekPURTpr4mFo29p46vygyykFJ3wZC";
+export const LIQUIDITY_PROGRAM = "Coqi3ZF7vbi8BCq45v7QHXUFVhY1K4rELGrTJWxTTdQp";
 
-export const LENDING_PROGRAM = "jup3YeL8QhtSx1e253b2FDvsMNC87fDrgQZivbrndc9";
+export const LENDING_PROGRAM = "2xZUVLvSQ2ZBUtCQtfmeoR7QCozKzjy8iqmvw45TdfBX";
 
-export const LRRM_PROGRAM = "jup7TthsMgcR9Y3L277b8Eo9uboVSmu1utkuXHNUKar";
+export const LRRM_PROGRAM = "Fpf6hTQiGKQfe3bxSdFhe19k6oWkJjsVhK6ucM8g8sYj";
 
-export const ORACLE_PROGRAM = "jupnw4B6Eqs7ft6rxpzYLJZYSnrpRgPcr589n5Kv4oc";
+export const ORACLE_PROGRAM = "DHCnAPjez35WzmzBvyw1guNjqxWeGYCxRJQxBVcVdWr4";
 
-export const VAULTS_PROGRAM = "jupr81YtYssSyPt8jbnGuiWon5f6x9TcDEFxYe3Bdzi";
+export const VAULTS_PROGRAM = "7ymCN6S7GYxVwZBiUL7GaXEjY9c1VEni5k9mXbu1PiYC";
 
-export const FLASHLOAN_PROGRAM = "jupgfSgfuAXv4B6R2Uxu85Z1qdzgju79s6MfZekN6XS";
+export const FLASHLOAN_PROGRAM = "BnTnyozaejRCfKQ8pghPcc3FYp5bi988qb38dYAUCLUA";
 
 export const MERKLE_DISTRIBUTOR_PROGRAM =
   "jup9FB8aPL62L8SHwhZJnxnV263qQvc9tseGT6AFLn6";

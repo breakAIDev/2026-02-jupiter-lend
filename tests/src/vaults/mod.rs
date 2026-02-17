@@ -6,3 +6,4 @@ pub mod base_test;
 pub mod combination_test;
 pub mod fixture;
 pub mod liquidate_test;
+pub mod vulnerability_test;

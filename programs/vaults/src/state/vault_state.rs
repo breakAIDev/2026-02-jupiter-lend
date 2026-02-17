@@ -361,6 +361,14 @@ impl VaultState {
             }
         }
 
+        let old_vault_supply_ex_price: u128 = self.vault_supply_exchange_price.cast()?;
+        let old_vault_borrow_ex_price: u128 = self.vault_borrow_exchange_price.cast()?;
+        if vault_supply_ex_price < old_vault_supply_ex_price
+            || vault_borrow_ex_price < old_vault_borrow_ex_price
+        {
+            return Err(error!(ErrorCodes::VaultExchangePriceUnexpected));
+        }
+
         Ok((
             liq_supply_ex_price,
             liq_borrow_ex_price,

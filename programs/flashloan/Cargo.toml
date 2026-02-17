@@ -9,7 +9,8 @@ crate-type = ["cdylib", "lib"]
 name = "flashloan"
 
 [features]
-default = []
+default = ["staging"]
+staging = []
 cpi = ["no-entrypoint"]
 no-entrypoint = []
 no-idl = []

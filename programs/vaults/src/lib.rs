@@ -13,7 +13,7 @@ use library::structs::AddressBool;
 use liquidity::state::TransferType;
 
 #[cfg(feature = "staging")]
-declare_id!("Ho32sUQ4NzuAQgkPkHuNDG3G18rgHmYtXFA8EBmqQrAu");
+declare_id!("7ymCN6S7GYxVwZBiUL7GaXEjY9c1VEni5k9mXbu1PiYC");
 
 #[cfg(not(feature = "staging"))]
 declare_id!("jupr81YtYssSyPt8jbnGuiWon5f6x9TcDEFxYe3Bdzi");
